@@ -43,7 +43,19 @@ const PostSchema = new Schema({
     }],
     default: []
   },
-
+  comment: {
+    type: [{
+      description: {
+        type: String,
+        required: true
+      },
+      user: {
+        type: Mongoose.Types.ObjectId,
+        ref: "User"
+      }
+    }],
+    default: []
+  }
 }, { timestamps: true });
 
 module.exports = Mongoose.model("Post", PostSchema);
