@@ -1,4 +1,5 @@
 {
-  "name": "@app/validators",
-  "version": "1.0.0"
+  "name": "@app/constants",
+  "version": "1.0.0",
+  "main": "index.constants.js"
 }

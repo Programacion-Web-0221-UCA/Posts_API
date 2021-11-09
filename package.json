@@ -3,10 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start-dev": "nodemon ./bin/www"
   },
   "dependencies": {
     "@app/classes": "file:classes",
+    "@app/config": "file:config",
+    "@app/constants": "file:constants",
     "@app/controllers": "file:controllers",
     "@app/middlewares": "file:middlewares",
     "@app/models": "file:models",
@@ -22,6 +25,10 @@
     "express-validator": "^6.13.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "password-generator": "^2.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
   }
 }
