@@ -5,6 +5,7 @@ var logger = require('morgan');
 
 const database = require("@app/config/mongoose.config");
 const mainRouter = require("@app/routes");
+const { errorHandler } = require("@app/middlewares/handler.middlewares");
 
 var app = express();
 
@@ -17,5 +18,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/", mainRouter);
+app.use(errorHandler);
 
 module.exports = app;
