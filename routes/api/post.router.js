@@ -1,0 +1,24 @@
+const Express = require("express");
+const router = Express.Router();
+
+const { roleValidatorHelper } = require("@app/middlewares/auth.middlewares");
+const { ROLES } = require("@app/constants");
+
+const postController = require("@app/controllers/post.controller");
+
+const { createValidator, updateValidator, addCommentValidator, idInParams } = require("@app/validators/post.validators");
+const runValidation = require("@app/validators");
+
+router.use(roleValidatorHelper(ROLES.USER));
+router.get("/all", postController.findAllAvaliable);
+router.get("/one/:id", idInParams, runValidation, postController.findOneById);
+router.patch("/like/:id", idInParams, runValidation, postController.toggleLike);
+router.patch("/comment/:id", idInParams, addCommentValidator, runValidation, postController.addComment);
+
+router.use(roleValidatorHelper(ROLES.ADMIN));
+router.post("/create", createValidator, runValidation, postController.create);
+router.get("/owned", postController.findAllOwned);
+router.put("/update/:id", idInParams, updateValidator, runValidation, postController.updateOneById );
+router.patch("/toggle/:id", idInParams, runValidation, postController.toggleActive);
+
+module.exports = router;

@@ -8,7 +8,7 @@ validators.idInParams = [
     .isMongoId().withMessage("Id must be mongo id")
 ]
 
-validators.create = [
+validators.createValidator = [
   body("title")
     .notEmpty().withMessage("Title field is required")
     .trim()
@@ -22,7 +22,7 @@ validators.create = [
     .isURL().withMessage("Image must be an URL")
 ];
 
-validators.update = [
+validators.updateValidator = [
   body("title")
     .trim()
     .isLength({ min: 8, max: 32 }).withMessage("Title length must be between 8 and 32 chars"),
@@ -33,7 +33,7 @@ validators.update = [
     .isURL().withMessage("Image must be an URL")
 ]
 
-validators.addComment = [
+validators.addCommentValidator = [
   body("description")
     .notEmpty().withMessage("Description field is required")
     .trim()
