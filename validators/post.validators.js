@@ -1,4 +1,4 @@
-const { body, param } = require("express-validator");
+const { body, param, query } = require("express-validator");
 
 const validators = {};
 
@@ -6,6 +6,16 @@ validators.idInParams = [
   param("id")
     .notEmpty().withMessage("Id field is required")
     .isMongoId().withMessage("Id must be mongo id")
+]
+
+validators.pagination = [
+  query("limit")
+    .notEmpty().withMessage("Limit query is required")
+    .isInt().withMessage("Limit must be an Int"),
+  query("page")
+    .notEmpty().withMessage("Page query is required")
+    .isInt().withMessage("Page must be an Int"),
+  
 ]
 
 validators.createValidator = [

@@ -43,7 +43,7 @@ const PostSchema = new Schema({
     }],
     default: []
   },
-  comment: {
+  comments: {
     type: [{
       description: {
         type: String,

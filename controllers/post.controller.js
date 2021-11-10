@@ -18,7 +18,7 @@ controller.create = async (req, res, next) => {
 
 controller.findAllAvaliable = async (req, res, next) => {
   try{
-    const { content: posts } = await postService.findAll({ active: true });
+    const { content: posts } = await postService.findAll(req.query, { active: true });
     return res.status(200).json(posts);
   } catch (error) {
     next(error);
@@ -29,7 +29,7 @@ controller.findAllOwned = async (req, res, next) => {
   try{
     const { _id: userId } = req.user;
 
-    const { content: posts } = await postService.findAll({ user: userId });
+    const { content: posts } = await postService.findAll(req.query, { user: userId });
     return res.status(200).json(posts);
   } catch (error) {
     next(error);
@@ -57,7 +57,7 @@ controller.updateOneById = async (req, res, next) => {
     const { status: postExists, content: post } = await postService.findOneByIdRaw(id);
     if (!postExists) return res.status(404).json({ error: "Post not found" });
 
-    const belongToUser = userId === post.user;
+    const belongToUser = userId.equals(post.user) ;
     if (!belongToUser) return res.status(401).json({ error: "Not allowed" });
 
     const { status: postUpdated } = await postService.updateContent(post, req.body);
@@ -77,7 +77,7 @@ controller.toggleActive = async (req, res, next) => {
     const { status: postExists, content: post } = await postService.findOneByIdRaw(id);
     if (!postExists) return res.status(404).json({ error: "Post not found" });
 
-    const belongToUser = userId === post.user;
+    const belongToUser = userId.equals(post.user);
     if (!belongToUser) return res.status(401).json({ error: "Not allowed" });
 
     const { status: postUpdated } = await postService.toggleActive(post);

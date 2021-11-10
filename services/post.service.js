@@ -16,7 +16,7 @@ service.register = async ({ title, description, image, user }) => {
   }
 }
 
-service.findAll = async ({limit=20, page=0}, query) => {
+service.findAll = async ({limit=20, page=0}, query={}) => {
   try{
     const limitInt = parseInt(limit);
     const pageInt = parseInt(page);
@@ -28,15 +28,11 @@ service.findAll = async ({limit=20, page=0}, query) => {
       skip: pageInt * limitInt,
       limit: limitInt,
       sort: [{ createdAt: -1 }] 
-    }).populate("user", "username")
-      .populate("likes", "username")
+    }).populate("user", "username -_id")
+      .populate("likes", "username -_id")
       .populate({
-        path: "comments",
-        populate: {
-          path: "user",
-          model: "User",
-          select: "username"
-        }
+        path: "comments.user",
+        select: "username -_id"
       });
     
     const pages = Math.ceil(count / limitInt);
@@ -52,20 +48,16 @@ service.findAll = async ({limit=20, page=0}, query) => {
   }
 }
 
-service.findOne = async (query) => {
+service.findOne = async (query={}) => {
   try{
     const cleanQuery = sanitizeObject(query);
 
     const post = await Post.findOne(cleanQuery)
-      .populate("user", "username")
-      .populate("likes", "username")
+      .populate("user", "username -_id")
+      .populate("likes", "username -_id")
       .populate({
-        path: "comments",
-        populate: {
-          path: "user",
-          model: "User",
-          select: "username"
-        }
+        path: "comments.user",
+        select: "username -_id"
       });
 
     if (!post) return new ServiceResponse(false);
@@ -143,10 +135,10 @@ service.addComment = async (post, { description, user }) => {
 service.toggleLike = async (post, userId) => {
   try{
     let likes = [...post.likes];
-    const alreadyExists = likes.findIndex(like => like === userId) >= 0;
+    const alreadyExists = likes.findIndex(like => like.equals(userId) ) >= 0;
 
     if(alreadyExists) {
-      likes = likes.filter(like => like !== userId );
+      likes = likes.filter(like => !like.equals(userId) );
     }else {
       likes = [...likes, userId];
     }
