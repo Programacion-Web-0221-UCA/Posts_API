@@ -109,7 +109,7 @@ service.updateContent = async (post, { title, description, image }) => {
   }
 }
 
-service.toogleActive = async (post) => {
+service.toggleActive = async (post) => {
   try{
     post.active = !post.active;
 
@@ -140,7 +140,7 @@ service.addComment = async (post, { description, user }) => {
 }
 
 //Likes Handlers
-service.toogleLike = async (post, userId) => {
+service.toggleLike = async (post, userId) => {
   try{
     let likes = [...post.likes];
     const alreadyExists = likes.findIndex(like => like === userId) >= 0;
