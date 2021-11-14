@@ -11,8 +11,9 @@ const authController = require("@app/controllers/auth.controller");
 router.post("/signin", loginValidator, runValidation, authController.login);
 
 router.use(authRequired);
-router.use(roleValidatorHelper(ROLES.SUPERADMIN));
+router.get("/whoami", authController.whoami);
 
+router.use(roleValidatorHelper(ROLES.SUPERADMIN));
 router.post("/signup", registerValidator, runValidation, authController.register);
 
 module.exports = router;

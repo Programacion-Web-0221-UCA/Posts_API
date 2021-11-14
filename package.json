@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "start-dev": "nodemon ./bin/www"
+    "start-dev": "nodemon ./bin/www",
+    "config": "node ./bin/uploadUsers"
   },
   "dependencies": {
     "@app/classes": "file:classes",
     "@app/config": "file:config",
     "@app/constants": "file:constants",
     "@app/controllers": "file:controllers",
+    "@app/data": "file:data",
     "@app/middlewares": "file:middlewares",
     "@app/models": "file:models",
     "@app/routes": "file:routes",

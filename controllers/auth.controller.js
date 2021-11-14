@@ -43,4 +43,13 @@ controller.login = async (req, res, next) => {
   }
 }
 
+controller.whoami = async (req, res, next) => {
+  try{
+    const { username } = req.user;
+    return res.status(200).json({ username });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = controller;

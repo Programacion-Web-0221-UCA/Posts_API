@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+
+require("dotenv").config();
+const debug = require("debug")("app:upload");
+const passwordGenerator = require("password-generator");
+const fs = require("fs");
+
+const database = require("@app/config/mongoose.config");
+const User = require("@app/models/User");
+const userService = require("@app/services/user.service");
+const { ROLES } = require("@app/constants"); 
+
+const GROUPS_QNT = process.env.GROUP_NUMBER || 54;
+const GROUP_PREFIX = process.env.GROUP_PREFIX || "gp";
+
+const SAPassword = process.env.SAP || passwordGenerator(16, false);
+
+const main = async () => {
+  const groups = [];
+
+  try {
+    await database.connect();
+
+    for(let i = 0; i < GROUPS_QNT; i++){
+      const user = {
+        username: `${GROUP_PREFIX}${i+1}_${ROLES.USER}`,
+        email: `${GROUP_PREFIX}${i+1}_user@test.com`,
+        password: passwordGenerator(16, false),
+      }
+
+      const admin = {
+        username: `${GROUP_PREFIX}${i+1}_${ROLES.ADMIN}`,
+        email: `${GROUP_PREFIX}${i+1}_admin@test.com`,
+        password: passwordGenerator(16, false),
+      }
+
+      const { status: userCreated } = await userService.register(user, ROLES.USER);
+      const { status: adminCreated } = await userService.register(admin, ROLES.ADMIN);
+
+      groups.push({
+        group: `${i+1}`, 
+        admin: { ...admin },
+        user: { ...user },
+        sync: userCreated && adminCreated,
+      });
+    }
+
+    fs.writeFileSync("./results.json", JSON.stringify(groups));
+
+    const { status: saCreated } = await userService.register({ username: "superadmin", email: "superadmin@test.com", password: SAPassword }, ROLES.SUPERADMIN);
+    const allRight = saCreated && groups.every(group => group.sync);
+
+    debug(allRight ? "Process finish without error" : "Process finish with errors");
+  } catch (error) {
+    debug(error)
+    debug("Ocurrio un error")
+    process.exit(1);
+  }finally {
+    await database.disconnect();
+  }
+}
+
+main();
