@@ -14,6 +14,7 @@ router.get("/all", pagination, runValidation, postController.findAllAvaliable);
 router.get("/one/:id", idInParams, runValidation, postController.findOneById);
 router.patch("/like/:id", idInParams, runValidation, postController.toggleLike);
 router.patch("/comment/:id", idInParams, addCommentValidator, runValidation, postController.addComment);
+router.patch("/fav/:id", idInParams, runValidation, postController.toggleFav);
 
 router.use(roleValidatorHelper(ROLES.ADMIN));
 router.post("/create", createValidator, runValidation, postController.create);

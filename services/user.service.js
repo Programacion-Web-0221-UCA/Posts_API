@@ -125,4 +125,25 @@ service.updateRole = async (user, role) => {
   }
 }
 
+service.toggleFavorite = async (user, postID) => {
+  try{
+    let favorites = [...(user.favorites ?? [])];
+    const alreadyExists = favorites.findIndex(fav => fav.equals(postID)) >= 0;
+
+    if(alreadyExists) {
+      favorites = favorites.filter(fav => !fav.equals(postID));
+    }else {
+      favorites = [...favorites, postID];
+    }
+
+    user.favorites = favorites;
+    const userSaved = user.save();
+
+    if(!userSaved) return new ServiceResponse(false);
+    return new ServiceResponse(true);
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = service;

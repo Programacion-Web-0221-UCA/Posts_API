@@ -1,4 +1,5 @@
 const postService = require("@app/services/post.service");
+const userService = require("@app/services/user.service");
 
 const controller = {};
 
@@ -101,6 +102,23 @@ controller.toggleLike = async (req, res, next) => {
     if(!postUpdated) return res.status(409).json({ error: "Not updated" });
 
     return res.status(200).json({ message: "Post updated" });
+  } catch (error) {
+    next(error);
+  }
+}
+
+controller.toggleFav = async (req, res, next) => {
+  try{
+    const { id } = req.params;
+    const { user }  = req;
+
+    const { status: postExists } = await postService.findOneByIdRaw(id);
+    if (!postExists) return res.status(404).json({ error: "Post not found" });
+
+    const { status: postSaved } = await userService.toggleFavorite(user, id);
+    if(!postSaved) return res.status(409).json({ error: "Not updated" });
+
+    return res.status(200).json({ message: "Fav applied" });
   } catch (error) {
     next(error);
   }

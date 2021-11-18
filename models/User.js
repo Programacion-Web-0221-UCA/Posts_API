@@ -30,6 +30,13 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  favorites: {
+    type: [{
+      type: Mongoose.Types.ObjectId,
+      ref: "Post"
+    }],
+    default: []
+  },
   salt: String,
   validTokens: [String],
 }, {
