@@ -124,6 +124,15 @@ controller.toggleFav = async (req, res, next) => {
   }
 }
 
+controller.getFavs = async (req, res, next) => {
+  try{
+    const { user } = req;
+    return res.status(200).json({ favorites: user.favorites ?? [] });
+  } catch (error) {
+    next(error);
+  }
+}
+
 controller.addComment = async (req, res, next) => {
   try{
     const { id } = req.params;
