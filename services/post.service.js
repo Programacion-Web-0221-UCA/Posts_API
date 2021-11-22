@@ -22,7 +22,7 @@ service.findAll = async ({limit=20, page=0}, query={}) => {
     const pageInt = parseInt(page);
     const cleanQuery = sanitizeObject(query);
 
-    const count = await Post.countDocuments({});
+    const count = await Post.countDocuments(cleanQuery);
     
     const posts = await Post.find(cleanQuery, undefined,  {
       skip: pageInt * limitInt,
