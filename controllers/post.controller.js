@@ -95,7 +95,7 @@ controller.toggleLike = async (req, res, next) => {
     const { id } = req.params;
     const { _id: userId } = req.user;
 
-    const { status: postExists, content: post } = await postService.findOneByIdRaw(id);
+    const { status: postExists, content: post } = await postService.findOne({_id: id, active: true});
     if (!postExists) return res.status(404).json({ error: "Post not found" });
     
     const { status: postUpdated } = await postService.toggleLike(post, userId);
@@ -112,7 +112,7 @@ controller.toggleFav = async (req, res, next) => {
     const { id } = req.params;
     const { user }  = req;
 
-    const { status: postExists } = await postService.findOneByIdRaw(id);
+    const { status: postExists } = await postService.findOne({_id: id, active: true});
     if (!postExists) return res.status(404).json({ error: "Post not found" });
 
     const { status: postSaved } = await userService.toggleFavorite(user, id);
@@ -139,7 +139,7 @@ controller.addComment = async (req, res, next) => {
     const { _id: userId } = req.user;
     const { description } = req.body;
 
-    const { status: postExists, content: post } = await postService.findOneByIdRaw(id);
+    const { status: postExists, content: post } = await postService.findOne({_id: id, active: true});
     if (!postExists) return res.status(404).json({ error: "Post not found" });
     
     const { status: postUpdated } = await postService.addComment(post, { user: userId, description })
