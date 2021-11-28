@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+
+require("dotenv").config();
+const debug = require("debug")("app:prune-comments");
+
+const database = require("@app/config/mongoose.config");
+const Post = require("@app/models/Post");
+const postService = require("@app/services/post.service");
+
+const main = async () => {
+  try {
+    await database.connect();
+
+    debug("Getting posts");
+    const posts = await Post.find({});
+
+    const prunePromises = posts.map(async (post) => {
+      const { status: didSync } = await postService.pruneCommentsAndLike(post);
+      return {
+        post: post._id,
+        sync: didSync
+      }
+    });
+
+    const response = await Promise.all(prunePromises);
+  } catch (error) {
+    console.error(error)
+    debug("An error happend")
+  } finally {
+    await database.disconnect()
+  }
+};
+
+main();

@@ -147,14 +147,31 @@ service.addComment = async (post, { description, user }) => {
 service.toggleLike = async (post, userId) => {
   try{
     let likes = [...post.likes];
-    const alreadyExists = likes.findIndex(like => like.equals(userId) ) >= 0;
+    const alreadyExists = likes.findIndex(like => like?.equals(userId) ) >= 0;
 
     if(alreadyExists) {
       likes = likes.filter(like => !like.equals(userId) );
     }else {
-      likes = [...likes, userId];
+      likes = userId ? [...likes, userId] : [...likes];
     }
 
+    post.likes = likes;
+
+    const postSaved = await post.save();
+
+    if(!postSaved) return new ServiceResponse(false);
+    return new ServiceResponse(true);
+  } catch (error) {
+    throw error;
+  }
+}
+
+service.pruneCommentsAndLike = async (post) => {
+  try{
+    const comments = [...post.comments].filter(comment => comment.user);
+    post.comments = comments;
+    
+    const likes = [...post.likes].filter(like => like);
     post.likes = likes;
 
     const postSaved = await post.save();
