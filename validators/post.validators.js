@@ -22,11 +22,11 @@ validators.createValidator = [
   body("title")
     .notEmpty().withMessage("Title field is required")
     .trim()
-    .isLength({ min: 8, max: 32 }).withMessage("Title length must be between 8 and 32 chars"),
+    .isLength({ min: 8, max: 32 }).withMessage("Title length must be between 8 and 32 chars").escape(),
   body("description")
     .notEmpty().withMessage("Description field is required")
     .trim()
-    .isLength({ min: 8}).withMessage("Description length must be min 8 chars"),
+    .isLength({ min: 8}).withMessage("Description length must be min 8 chars").escape(),
   body("image")
     .notEmpty().withMessage("Image field is required")
     .isURL().withMessage("Image must be an URL")
@@ -35,10 +35,10 @@ validators.createValidator = [
 validators.updateValidator = [
   body("title")
     .trim()
-    .isLength({ min: 8, max: 32 }).withMessage("Title length must be between 8 and 32 chars"),
+    .isLength({ min: 8, max: 32 }).withMessage("Title length must be between 8 and 32 chars").escape(),
   body("description")
     .trim()
-    .isLength({ min: 8}).withMessage("Description length must be min 8 chars"),
+    .isLength({ min: 8}).withMessage("Description length must be min 8 chars").escape(),
   body("image")
     .isURL().withMessage("Image must be an URL")
 ]
@@ -47,7 +47,7 @@ validators.addCommentValidator = [
   body("description")
     .notEmpty().withMessage("Description field is required")
     .trim()
-    .isLength({ min: 8}).withMessage("Description length must be min 8 chars"),
+    .isLength({ min: 8}).withMessage("Description length must be min 8 chars").escape(),
 ]
 
 module.exports = validators;
