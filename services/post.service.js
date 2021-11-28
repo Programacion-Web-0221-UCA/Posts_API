@@ -67,6 +67,18 @@ service.findOne = async (query={}) => {
   }
 }
 
+service.findOneRaw = async (query={}) => {
+  try{
+    const cleanQuery = sanitizeObject(query);
+    const post = await Post.findOne(cleanQuery);
+
+    if (!post) return new ServiceResponse(false);
+    return new ServiceResponse(true, post);
+  } catch (error) {
+    throw error;
+  }
+}
+
 service.findOneByIdRaw = async (id) => {
   try{
     const post = await Post.findById(id);
